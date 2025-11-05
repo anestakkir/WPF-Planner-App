@@ -1,0 +1,36 @@
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# Visual Studio Team Services
+.vs/
+.history/
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+
+# Dotnet code metrics
+*.CodeAnalysisLog.xml
+
+# Miscellaneous
+*.DS_Store
+Thumbs.db

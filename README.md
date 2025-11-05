@@ -1,0 +1,18 @@
+# Ежедневник (WPF)
+
+Учебный проект по базам данных
+
+## Запуск
+
+1.  Откройте SQL Server Management Studio (SSMS).
+2.  Выполните скрипт из файла `Database/CreateDatabase.sql` для создания базы данных `new_planner` и всех таблиц.
+3.  Откройте файл `DatabaseConfig.cs` и при необходимости измените `Server=...` на имя вашего SQL-сервера.
+4.  Откройте решение `new_planner.sln` в Visual Studio и запустите проект.
+
+## Учетные данные для теста
+
+*   **Администратор:** admin / admin
+*   **Менеджер:** manager / manager
+*   **Директор:** director / director
+*   **Пользователь1:** user123 / user123
+*   **Пользователь2:** testus / testus

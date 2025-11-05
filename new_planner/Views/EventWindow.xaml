@@ -1,0 +1,80 @@
+﻿<Window x:Class="new_planner.Views.EventWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:new_planner.Views"
+        xmlns:converters="clr-namespace:new_planner.Converters"
+        mc:Ignorable="d"
+        Title="Детали мероприятия"
+        WindowStartupLocation="CenterScreen" FontSize="14"
+        SizeToContent="WidthAndHeight" MinWidth="550">
+
+    <Window.Resources>
+        <converters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Window.Resources>
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="0" Content="Название:"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Margin="5" Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
+        <Label Grid.Row="1" Content="Место:"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="5" Text="{Binding Location, UpdateSourceTrigger=PropertyChanged}" />
+        <Label Grid.Row="2" Content="Время начала:"/>
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+            <DatePicker Margin="5,5,0,5" SelectedDate="{Binding StartDate}"/>
+            <Label Content="в" VerticalAlignment="Center"/>
+            <TextBox x:Name="StartHoursTextBox" Width="40" Margin="5" Text="{Binding StartHours, UpdateSourceTrigger=PropertyChanged}" MaxLength="2" PreviewTextInput="TimeTextBox_PreviewTextInput" LostFocus="TimeTextBox_LostFocus"/>
+            <Label Content=":" VerticalAlignment="Center"/>
+            <TextBox x:Name="StartMinutesTextBox" Width="40" Margin="5" Text="{Binding StartMinutes, UpdateSourceTrigger=PropertyChanged}" MaxLength="2" PreviewTextInput="TimeTextBox_PreviewTextInput" LostFocus="TimeTextBox_LostFocus"/>
+        </StackPanel>
+        <Label Grid.Row="3" Content="Время окончания:"/>
+        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+            <DatePicker Margin="5,5,0,5" SelectedDate="{Binding EndDate}"/>
+            <Label Content="в" VerticalAlignment="Center"/>
+            <TextBox x:Name="EndHoursTextBox" Width="40" Margin="5" Text="{Binding EndHours, UpdateSourceTrigger=PropertyChanged}" MaxLength="2" PreviewTextInput="TimeTextBox_PreviewTextInput" LostFocus="TimeTextBox_LostFocus"/>
+            <Label Content=":" VerticalAlignment="Center"/>
+            <TextBox x:Name="EndMinutesTextBox" Width="40" Margin="5" Text="{Binding EndMinutes, UpdateSourceTrigger=PropertyChanged}" MaxLength="2" PreviewTextInput="TimeTextBox_PreviewTextInput" LostFocus="TimeTextBox_LostFocus"/>
+        </StackPanel>
+        <Label Grid.Row="4" Content="Назначить:" VerticalAlignment="Top" Margin="0,5,0,0" Visibility="{Binding CanAssign, Converter={StaticResource BoolToVis}}"/>
+        <Grid Grid.Row="4" Grid.Column="1" Margin="5" Visibility="{Binding CanAssign, Converter={StaticResource BoolToVis}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <CheckBox Grid.Row="0" Content="Назначить сотруднику" IsChecked="{Binding IsAssigning}"/>
+            <ComboBox Grid.Row="1" Margin="0,5,0,0" ItemsSource="{Binding AssignableUsers}" SelectedItem="{Binding SelectedAssignableUser}" DisplayMemberPath="Username" Visibility="{Binding IsAssigning, Converter={StaticResource BoolToVis}}"/>
+        </Grid>
+        <Label Grid.Row="5" Content="Напомнить:" VerticalAlignment="Center"/>
+        <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+            <CheckBox IsChecked="{Binding ReminderEnabled}" VerticalAlignment="Center" Margin="5,0,0,0"/>
+            <TextBlock Text="за" Margin="10,0" VerticalAlignment="Center" Visibility="{Binding ReminderEnabled, Converter={StaticResource BoolToVis}}"/>
+            <TextBox Width="50" Text="{Binding ReminderMinutesBefore}" Visibility="{Binding ReminderEnabled, Converter={StaticResource BoolToVis}}"/>
+            <TextBlock Text="минут до начала" Margin="5,0" VerticalAlignment="Center" Visibility="{Binding ReminderEnabled, Converter={StaticResource BoolToVis}}"/>
+        </StackPanel>
+        <Label Grid.Row="6" Content="Картинка:" VerticalAlignment="Top" Margin="0,5,0,0"/>
+        <StackPanel Grid.Row="6" Grid.Column="1" Margin="5">
+            <Button Content="Выбрать..." HorizontalAlignment="Left" Command="{Binding SelectImageCommand}"/>
+            <Image Source="{Binding ImagePath}" Height="120" Stretch="Uniform" Margin="0,10,0,0" Visibility="{Binding ImagePath, Converter={StaticResource NotNullToVisibilityConverter}}" HorizontalAlignment="Left"/>
+        </StackPanel>
+        <Label Grid.Row="7" Content="Описание:" VerticalAlignment="Top"/>
+        <TextBox Grid.Row="7" Grid.Column="1" Margin="5" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="80" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Grid.Row="8" Grid.Column="1" Content="Сохранить" HorizontalAlignment="Right" Padding="15,5" Margin="0,10,0,0" Command="{Binding SaveCommand}" IsDefault="True"/>
+    </Grid>
+</Window>

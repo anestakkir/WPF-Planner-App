@@ -1,0 +1,141 @@
+﻿<Window x:Class="new_planner.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:new_planner.Views"
+        xmlns:converters="clr-namespace:new_planner.Converters"
+        mc:Ignorable="d"
+        Title="Ежедневник" Height="600" Width="1000"
+        WindowStartupLocation="CenterScreen" FontSize="14">
+
+    <Window.Resources>
+        <converters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:RoleToColumnWidthConverter x:Key="RoleToWidthConverter"/>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <DockPanel Grid.Column="0" Margin="10">
+            <DockPanel DockPanel.Dock="Top" Margin="0,0,0,10">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top">
+                    <Button Content="Добавить" Padding="15,5" Margin="5,0" 
+                            Command="{Binding AddEventCommand}"
+                            Visibility="{Binding CanAddEvents, Converter={StaticResource BoolToVis}}"/>
+                    <Button Content="Удалить" Padding="15,5" Margin="5,0" 
+                            Command="{Binding DeleteEventCommand}"
+                            Visibility="{Binding CanDeleteEvents, Converter={StaticResource BoolToVis}}"/>
+                </StackPanel>
+                <StackPanel>
+                    <Label Content="{Binding WelcomeMessage}" FontSize="20" FontWeight="Bold" Padding="0"/>
+                    <TextBlock Text="{Binding UserRoleInfo}" FontSize="12" Foreground="Gray" Margin="2,0,0,0"/>
+                </StackPanel>
+            </DockPanel>
+
+            <TabControl Margin="0,0,10,0">
+                <TabItem Header="Текущие">
+                    <ListView ItemsSource="{Binding CurrentEvents}" SelectedItem="{Binding SelectedEvent}">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Создал" Width="{Binding DataContext.ShowCreatorColumn, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource RoleToWidthConverter}}" DisplayMemberBinding="{Binding CreatorUsername}"/>
+                                <GridViewColumn Header="Название" Width="250">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Title}" TextAlignment="Center"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Время начала" Width="140" DisplayMemberBinding="{Binding StartTime, StringFormat='g'}"/>
+                                <GridViewColumn Header="Место" Width="150" DisplayMemberBinding="{Binding Location}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </TabItem>
+                <TabItem Header="Будущие">
+                    <ListView ItemsSource="{Binding FutureEvents}" SelectedItem="{Binding SelectedEvent}">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Создал" Width="{Binding DataContext.ShowCreatorColumn, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource RoleToWidthConverter}}" DisplayMemberBinding="{Binding CreatorUsername}"/>
+                                <GridViewColumn Header="Название" Width="250">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Title}" TextAlignment="Center"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Время начала" Width="140" DisplayMemberBinding="{Binding StartTime, StringFormat='g'}"/>
+                                <GridViewColumn Header="Место" Width="150" DisplayMemberBinding="{Binding Location}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </TabItem>
+                <TabItem Header="Прошедшие">
+                    <ListView ItemsSource="{Binding PastEvents}" SelectedItem="{Binding SelectedEvent}">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Создал" Width="{Binding DataContext.ShowCreatorColumn, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource RoleToWidthConverter}}" DisplayMemberBinding="{Binding CreatorUsername}"/>
+                                <GridViewColumn Header="Название" Width="250">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Title}" TextAlignment="Center"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Время начала" Width="140" DisplayMemberBinding="{Binding StartTime, StringFormat='g'}"/>
+                                <GridViewColumn Header="Место" Width="150" DisplayMemberBinding="{Binding Location}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </TabItem>
+            </TabControl>
+        </DockPanel>
+
+        <Border Grid.Column="1" Background="#F0F0F0" Padding="15">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding SelectedEvent, Converter={StaticResource NotNullToVisibilityConverter}}">
+                <StackPanel>
+                    <TextBlock Text="Детали мероприятия" FontSize="18" FontWeight="Bold" Margin="0,0,0,15"/>
+                    <Image Source="{Binding SelectedEvent.ImagePath}" Height="200" Stretch="Uniform" Margin="0,0,0,10"
+                           Visibility="{Binding SelectedEvent.ImagePath, Converter={StaticResource NotNullToVisibilityConverter}}"/>
+                    <TextBlock Text="{Binding SelectedEvent.Title}" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,5"/>
+                    <TextBlock Text="{Binding SelectedEvent.Description}" FontStyle="Italic" TextWrapping="Wrap" Margin="0,0,0,15"/>
+                    <TextBlock Margin="0,5,0,0"><Run FontWeight="Bold">Начало:</Run> <Run Text="{Binding SelectedEvent.StartTime, StringFormat='dd.MM.yyyy HH:mm'}"/></TextBlock>
+                    <TextBlock Margin="0,5,0,0"><Run FontWeight="Bold">Окончание:</Run> <Run Text="{Binding SelectedEvent.EndTime, StringFormat='dd.MM.yyyy HH:mm'}"/></TextBlock>
+                    <TextBlock Margin="0,5,0,15"><Run FontWeight="Bold">Место:</Run> <Run Text="{Binding SelectedEvent.Location}"/></TextBlock>
+                    <TextBlock Visibility="{Binding SelectedEvent.ReminderEnabled, Converter={StaticResource BoolToVis}}" Foreground="ForestGreen" FontWeight="SemiBold" Margin="0,0,0,15">
+                        <Run Text="✓ Напомнить за "/><Run Text="{Binding SelectedEvent.ReminderMinutesBefore}"/><Run Text=" минут"/>
+                    </TextBlock>
+                    <TextBlock Margin="0,5,0,15" FontStyle="Italic" Foreground="DarkSlateGray"
+                     Text="{Binding AssignmentInfo}"
+                         Visibility="{Binding AssignmentInfo, Converter={StaticResource NotNullToVisibilityConverter}}"/>
+                    <Border Background="#E0E0E0" CornerRadius="5" Padding="10" Margin="0,20,0,0" Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <TextBlock Text="Панель администратора" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+                            <TextBlock Text="{Binding AdminStatistics}" TextWrapping="Wrap"/>
+                            <Button Content="Управление пользователями" Margin="0,10,0,0" Command="{Binding ManageUsersCommand}"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</Window>
