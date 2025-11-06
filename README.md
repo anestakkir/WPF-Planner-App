@@ -11,7 +11,7 @@
 
 ## Учетные данные для теста
 
-*   **Администратор:** admin / admin
+*   **Администратор:** admin / adminn
 *   **Менеджер:** manager / manager
 *   **Директор:** director / director
 *   **Пользователь1:** user123 / user123
